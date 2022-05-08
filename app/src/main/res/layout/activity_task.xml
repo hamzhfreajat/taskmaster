@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".ui.TaskDetailActivity"
+    android:layout_marginBottom="10dp"
+    android:padding="10dp">
+
+
+        <TextView
+            android:id="@+id/resTitle"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/task_1" />
+
+        <TextView
+            android:id="@+id/resBody"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/description" />
+
+        <TextView
+            android:id="@+id/resStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="@string/complete" />
+
+
+
+</LinearLayout>
