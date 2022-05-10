@@ -12,3 +12,10 @@ After update you can now add you name from setting page then it will appear in t
 In this time I add recycleview to show the task in the main page 
 
 ![recycleView](screenshots/recycleView.png)
+
+## Room 
+Now you can add the task to your sqlite database from add task button 
+
+![recycleView](screenshots/home-page.png)
+![recycleView](screenshots/add_task.png)
+![recycleView](screenshots/task_details.png)

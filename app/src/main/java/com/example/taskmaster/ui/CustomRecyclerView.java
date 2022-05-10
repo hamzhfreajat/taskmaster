@@ -1,9 +1,9 @@
 package com.example.taskmaster.ui;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,10 +17,11 @@ import java.util.List;
 public class CustomRecyclerView extends RecyclerView.Adapter<CustomRecyclerView.CustomHoleder> {
 
     List<TaskData> dataList ;
+    CustomClickListener listener;
 
-    public CustomRecyclerView(List<TaskData> dataList) {
+    public CustomRecyclerView(List<TaskData> dataList, CustomClickListener listener) {
         this.dataList = dataList;
-        Log.i("Array", this.dataList.toString());
+        this.listener = listener;
     }
 
     @NonNull
@@ -28,14 +29,14 @@ public class CustomRecyclerView extends RecyclerView.Adapter<CustomRecyclerView.
     public CustomHoleder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View listItemView = layoutInflater.inflate(R.layout.activity_task ,parent , false);
-        return new CustomHoleder(listItemView);
+        return new CustomHoleder(listItemView, listener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CustomHoleder holder, int position) {
         holder.resTitle.setText(dataList.get(position).getTitle());
         holder.resBody.setText(dataList.get(position).getBody());
-        holder.resStatus.setText(dataList.get(position).getState());
+        holder.resStatus.setText(dataList.get(position).getState().toString());
     }
 
     @Override
@@ -43,15 +44,26 @@ public class CustomRecyclerView extends RecyclerView.Adapter<CustomRecyclerView.
         return dataList.size();
     }
 
-    class CustomHoleder extends RecyclerView.ViewHolder{
+    static class CustomHoleder extends RecyclerView.ViewHolder {
         TextView resTitle ;
         TextView resBody ;
         TextView resStatus;
-        public CustomHoleder(@NonNull View itemView) {
+        CustomClickListener listener ;
+        public CustomHoleder(@NonNull View itemView , CustomClickListener listener) {
             super(itemView);
+            this.listener = listener;
             resTitle = itemView.findViewById(R.id.resTitle);
             resBody = itemView.findViewById(R.id.resBody);
             resStatus = itemView.findViewById(R.id.resStatus);
+
+            itemView.setOnClickListener(v -> listener.onTaskItemClicked(getAdapterPosition()));
         }
+
+
+
+    }
+
+    public interface CustomClickListener{
+        void onTaskItemClicked(int position);
     }
 }

@@ -6,17 +6,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.taskmaster.data.AppDatabase;
 import com.example.taskmaster.data.TaskData;
 import com.example.taskmaster.ui.CustomRecyclerView;
 import com.example.taskmaster.ui.SettingActivity;
@@ -37,17 +33,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getData();
+//        getData();
 
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+//        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+//
+//        CustomRecyclerView customRecyclerView = new CustomRecyclerView(taskData);
+//
+//        recyclerView.setAdapter(customRecyclerView);
+//
+//        recyclerView.setHasFixedSize(true);
+//
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        CustomRecyclerView customRecyclerView = new CustomRecyclerView(taskData);
-
-        recyclerView.setAdapter(customRecyclerView);
-
-        recyclerView.setHasFixedSize(true);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        Button addTaskBtn = findViewById(R.id.btn_add_task);
+        addTaskBtn.setOnClickListener(view -> {
+            startActivity(new Intent(getApplicationContext() , AddTaskActivity.class));
+        });
 
 
 //        mUserTitle = findViewById(R.id.myTaskText);
@@ -67,45 +68,69 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void getData(){
-        taskData.add(new TaskData("task 1" , "Solve task 1 " , "new"));
-        taskData.add(new TaskData("task 2" , "Solve task 2 " , "assigned"));
-        taskData.add(new TaskData("task 3" , "Solve task 3 " , "assigned"));
-        taskData.add(new TaskData("task 4" , "Solve task 4 " , "in progress"));
-        taskData.add(new TaskData("task 5" , "Solve task 5 " , "in progress"));
-        taskData.add(new TaskData("task 6" , "Solve task 6 " , "complete"));
-        taskData.add(new TaskData("task 7" , "Solve task 7 " , "complete"));
-        taskData.add(new TaskData("task 8" , "Solve task 8 " , "new"));
-        taskData.add(new TaskData("task 9" , "Solve task 9 " , "new"));
+    @Override
+    protected void onResume() {
+        List<TaskData> taskData2 = AppDatabase.getInstance(this).taskDao().getAll();
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
 
+        CustomRecyclerView customRecyclerView = new CustomRecyclerView(taskData2, new CustomRecyclerView.CustomClickListener() {
+            @Override
+            public void onTaskItemClicked(int position) {
+                Intent taskDetailActivity = new Intent(getApplicationContext() , TaskDetailActivity.class);
+                taskDetailActivity.putExtra("id" ,  taskData2.get(position).getId().toString());
+                startActivity(taskDetailActivity);
+            }
+        });
+
+        recyclerView.setAdapter(customRecyclerView);
+
+
+
+        recyclerView.setHasFixedSize(true);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        super.onResume();
     }
+
+//    public void getData(){
+//        taskData.add(new TaskData("task 1" , "Solve task 1 " , "new"));
+//        taskData.add(new TaskData("task 2" , "Solve task 2 " , "assigned"));
+//        taskData.add(new TaskData("task 3" , "Solve task 3 " , "assigned"));
+//        taskData.add(new TaskData("task 4" , "Solve task 4 " , "in progress"));
+//        taskData.add(new TaskData("task 5" , "Solve task 5 " , "in progress"));
+//        taskData.add(new TaskData("task 6" , "Solve task 6 " , "complete"));
+//        taskData.add(new TaskData("task 7" , "Solve task 7 " , "complete"));
+//        taskData.add(new TaskData("task 8" , "Solve task 8 " , "new"));
+//        taskData.add(new TaskData("task 9" , "Solve task 9 " , "new"));
+//    }
 //    @Override
 //    protected void onResume() {
 //        setUserName();
 //        super.onResume();
 //    }
 //
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.main , menu);
-//        return true;
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main , menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_settings:
+                navigateToSettings();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 //
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        switch (item.getItemId()){
-//            case R.id.action_settings:
-//                navigateToSettings();
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
-//
-//    public void navigateToSettings(){
-//        Intent setttingIntent = new Intent(this , SettingActivity.class);
-//        startActivity(setttingIntent);
-//    }
+    public void navigateToSettings(){
+        Intent settingIntent = new Intent(this , SettingActivity.class);
+        startActivity(settingIntent);
+    }
 //    public void navigateToDetail(){
 //        labTask.setOnClickListener(view -> {
 //            Intent taskDetailActivity = new Intent(getApplicationContext() , TaskDetailActivity.class);

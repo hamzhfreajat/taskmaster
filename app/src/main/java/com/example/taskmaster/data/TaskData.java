@@ -2,9 +2,22 @@ package com.example.taskmaster.data;
 
 import android.util.Log;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "task_data")
 public class TaskData {
+    @PrimaryKey(autoGenerate = true)
+    private Long id ;
+    @ColumnInfo(name = "title")
     private String title ;
+    @ColumnInfo(name = "body")
     private String body ;
+
+
+
+    @ColumnInfo(name = "state")
     private String state ;
 
     public TaskData(String title, String body, String state) {
@@ -21,6 +34,10 @@ public class TaskData {
         return title;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getBody() {
         return body;
     }
@@ -29,13 +46,8 @@ public class TaskData {
         return state;
     }
 
-    @Override
-    public String toString() {
-        return "TaskData{" +
-                "title='" + title + '\'' +
-                ", body='" + body + '\'' +
-                ", state='" + state + '\'' +
-                '}';
+    public Long getId() {
+        return id;
     }
 
     public void setBody(String body) {

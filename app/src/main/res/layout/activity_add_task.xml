@@ -7,54 +7,57 @@
     tools:context=".AddTaskActivity">
 
     <EditText
-        android:id="@+id/taskTitle"
+        android:id="@+id/edit_task_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:ems="10"
+        android:textSize="15sp"
         android:inputType="textPersonName"
-        android:text="@string/task_title"
+        android:hint="@string/task_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/taskDesc"
+        android:id="@+id/edit_task_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
         android:ems="10"
+        android:textSize="15sp"
         android:inputType="textPersonName"
-        android:text="@string/task_description"
+        android:hint="@string/task_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/taskTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_task_title" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:entries="@array/status_arrays"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_task_desc" />
 
     <Button
-        android:id="@+id/addTask"
+        android:id="@+id/btn_submit_task"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="44dp"
         android:text="@string/add_task"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.231"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/taskDesc" />
-
-    <TextView
-        android:id="@+id/totleTaskCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:text="Total Task : 0 "
-        android:textColor="@color/black"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.07"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addTask" />
+        app:layout_constraintTop_toBottomOf="@+id/spinner"
+        app:layout_constraintVertical_bias="0.081" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
