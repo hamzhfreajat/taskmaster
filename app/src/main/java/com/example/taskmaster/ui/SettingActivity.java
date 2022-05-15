@@ -2,6 +2,7 @@ package com.example.taskmaster.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.taskmaster.MainActivity;
 import com.example.taskmaster.R;
 
 public class SettingActivity extends AppCompatActivity {
@@ -40,6 +42,6 @@ public class SettingActivity extends AppCompatActivity {
         SharedPreferences.Editor preferanceEditor = sharedPreferences.edit();
         preferanceEditor.putString(USERNAME, userName);
         preferanceEditor.apply();
-
+        startActivity(new Intent(getApplicationContext() , MainActivity.class));
     }
 }

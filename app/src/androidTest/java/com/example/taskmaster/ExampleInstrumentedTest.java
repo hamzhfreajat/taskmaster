@@ -2,13 +2,20 @@ package com.example.taskmaster;
 
 import android.content.Context;
 
+import androidx.recyclerview.widget.RecyclerView;
+
+
+import androidx.test.espresso.Espresso;
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -37,16 +44,35 @@ import java.util.List;
 public class ExampleInstrumentedTest {
     @Rule
     public ActivityScenarioRule<MainActivity> activityActivityScenarioRule = new ActivityScenarioRule<>(MainActivity.class);
+    private RecyclerView recyclerView;
 
     @Test
     public void navigateToAddTask(){
-//        TaskData taskData2 = AppDatabase.getInstance(MainActivity.class).taskDao().getTaskByID(0);
-
         onView(withId(R.id.btn_add_task)).perform(click());
-        onView(withId(R.id.edit_task_title)).perform(typeText("Task 10") ,closeSoftKeyboard());
+        onView(withId(R.id.edit_task_title)).perform(typeText("Task 12") ,closeSoftKeyboard());
         onView(withId(R.id.edit_task_desc)).perform(typeText("Do your home work") ,closeSoftKeyboard());
         onView(withId(R.id.btn_submit_task)).perform(click());
+        activityActivityScenarioRule.getScenario().onActivity(activity -> {
+               recyclerView = activity.findViewById(R.id.recycler_view);
+        });
+        int item = recyclerView.getAdapter().getItemCount();
+        onView(withId(R.id.recycler_view)).perform(RecyclerViewActions.scrollToPosition(item-1));
+        onView(withId(R.id.recycler_view)).perform(RecyclerViewActions.actionOnItemAtPosition(item-1 , click()));
+        onView(withId(R.id.text_title)).check(matches(withText("Task 12")));
+        onView(withId(R.id.text_description)).check(matches(withText("Do your home work")));
+        onView(withId(R.id.text_status)).check(matches(withText("new")));
 
+
+
+    }
+
+    @Test
+    public void editUserName(){
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText("Setting")).perform(click());
+        onView(withId(R.id.edit_user_name)).perform(typeText("Ahmad") ,closeSoftKeyboard());
+        onView(withId(R.id.btn_save)).perform(click());
+        onView(withId(R.id.text_user)).check(matches(withText("Ahmad Tasks"))) ;
     }
 
     @Test

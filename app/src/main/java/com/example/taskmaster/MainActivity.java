@@ -6,10 +6,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.taskmaster.data.AppDatabase;
@@ -23,7 +26,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-//    private TextView mUserTitle;
+    private TextView mUserTitle;
 //    private Button labTask;
 //    private Button codeChallangeTask;
 //    private Button sleepTask;
@@ -51,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-//        mUserTitle = findViewById(R.id.myTaskText);
-//        labTask = findViewById(R.id.btn_task1);
+        mUserTitle = findViewById(R.id.text_user);
+//        labTask = findViewById(R.id.btn_taskmyTaskText1);
 //        codeChallangeTask = findViewById(R.id.btn_task2);
 //        sleepTask = findViewById(R.id.btn_task3);
 
@@ -70,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        setUserName();
         List<TaskData> taskData2 = AppDatabase.getInstance(this).taskDao().getAll();
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
 
@@ -151,8 +155,8 @@ public class MainActivity extends AppCompatActivity {
 //        });
 //    }
 //
-//    public void setUserName(){
-//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-//        mUserTitle.setText(sharedPreferences.getString("username" , "My") + " Tasks");
-//    }
+    public void setUserName(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mUserTitle.setText(sharedPreferences.getString("username" , "My") + " Tasks");
+    }
 }
