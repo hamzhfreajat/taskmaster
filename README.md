@@ -19,3 +19,6 @@ Now you can add the task to your sqlite database from add task button
 ![recycleView](screenshots/home-page.png)
 ![recycleView](screenshots/add_task.png)
 ![recycleView](screenshots/task_details.png)
+
+
+## AWS 
