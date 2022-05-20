@@ -8,13 +8,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amplifyframework.AmplifyException;
+import com.amplifyframework.api.aws.AWSApiPlugin;
+import com.amplifyframework.api.graphql.model.ModelQuery;
+import com.amplifyframework.core.Amplify;
+import com.amplifyframework.datastore.AWSDataStorePlugin;
+import com.amplifyframework.datastore.generated.model.Task;
 import com.example.taskmaster.data.AppDatabase;
 import com.example.taskmaster.data.TaskData;
 import com.example.taskmaster.ui.CustomRecyclerView;
@@ -31,10 +41,25 @@ public class MainActivity extends AppCompatActivity {
 //    private Button codeChallangeTask;
 //    private Button sleepTask;
     List<TaskData> taskData = new ArrayList<>();
+    private Handler handler;
+    private List<Task> mytasks;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        try {
+            Amplify.addPlugin(new AWSDataStorePlugin());
+            Amplify.addPlugin(new AWSApiPlugin());
+            Amplify.configure(getApplicationContext());
+
+            Log.i("Tutorial", "Initialized Amplify");
+        } catch (AmplifyException e) {
+            Log.e("Tutorial", "Could not initialize Amplify", e);
+        }
+
+
 
 //        getData();
 
@@ -74,25 +99,51 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         setUserName();
-        List<TaskData> taskData2 = AppDatabase.getInstance(this).taskDao().getAll();
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        mytasks = new ArrayList<>();
+        Handler handler = new Handler(Looper.getMainLooper() , msg -> {
+            RecyclerView recyclerView = findViewById(R.id.recycler_view);
 
-        CustomRecyclerView customRecyclerView = new CustomRecyclerView(taskData2, new CustomRecyclerView.CustomClickListener() {
-            @Override
-            public void onTaskItemClicked(int position) {
-                Intent taskDetailActivity = new Intent(getApplicationContext() , TaskDetailActivity.class);
-                taskDetailActivity.putExtra("id" ,  taskData2.get(position).getId().toString());
-                startActivity(taskDetailActivity);
-            }
+            CustomRecyclerView customRecyclerView = new CustomRecyclerView(mytasks, new CustomRecyclerView.CustomClickListener() {
+                @Override
+                public void onTaskItemClicked(int position) {
+                    Intent taskDetailActivity = new Intent(getApplicationContext() , TaskDetailActivity.class);
+                    taskDetailActivity.putExtra("id" ,  mytasks.get(position).getId().toString());
+                    startActivity(taskDetailActivity);
+                }
+            });
+
+            recyclerView.setAdapter(customRecyclerView);
+
+
+
+            recyclerView.setHasFixedSize(true);
+
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+            return true ;
         });
 
-        recyclerView.setAdapter(customRecyclerView);
+        Amplify.API.query(
+                ModelQuery.list(Task.class),
+                response -> {
+
+                    for (Task task : response.getData()) {
+                        mytasks.add(task);
+                    }
+                    Bundle bundle = new Bundle();
+                    bundle.putString("data" , "Done");
+
+                    Message message = new Message();
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+
+                },
+                error -> Log.e("MyAmplifyApp", "Query failure", error)
+        );
 
 
+//        List<TaskData> taskData2 = AppDatabase.getInstance(this).taskDao().getAll();
 
-        recyclerView.setHasFixedSize(true);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         super.onResume();
     }

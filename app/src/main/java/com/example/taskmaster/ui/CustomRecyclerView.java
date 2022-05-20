@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amplifyframework.datastore.generated.model.Task;
 import com.example.taskmaster.R;
 import com.example.taskmaster.data.TaskData;
 
@@ -16,10 +17,10 @@ import java.util.List;
 
 public class CustomRecyclerView extends RecyclerView.Adapter<CustomRecyclerView.CustomHoleder> {
 
-    List<TaskData> dataList ;
+    List<Task> dataList ;
     CustomClickListener listener;
 
-    public CustomRecyclerView(List<TaskData> dataList, CustomClickListener listener) {
+    public CustomRecyclerView(List<Task> dataList, CustomClickListener listener) {
         this.dataList = dataList;
         this.listener = listener;
     }
@@ -36,7 +37,7 @@ public class CustomRecyclerView extends RecyclerView.Adapter<CustomRecyclerView.
     public void onBindViewHolder(@NonNull CustomHoleder holder, int position) {
         holder.resTitle.setText(dataList.get(position).getTitle());
         holder.resBody.setText(dataList.get(position).getBody());
-        holder.resStatus.setText(dataList.get(position).getState().toString());
+        holder.resStatus.setText(dataList.get(position).getStatus().toString());
     }
 
     @Override
