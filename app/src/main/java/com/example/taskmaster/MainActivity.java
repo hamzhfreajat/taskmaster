@@ -21,10 +21,12 @@ import android.widget.Toast;
 
 import com.amplifyframework.AmplifyException;
 import com.amplifyframework.api.aws.AWSApiPlugin;
+import com.amplifyframework.api.graphql.model.ModelMutation;
 import com.amplifyframework.api.graphql.model.ModelQuery;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.AWSDataStorePlugin;
 import com.amplifyframework.datastore.generated.model.Task;
+import com.amplifyframework.datastore.generated.model.Team;
 import com.example.taskmaster.data.AppDatabase;
 import com.example.taskmaster.data.TaskData;
 import com.example.taskmaster.ui.CustomRecyclerView;
@@ -58,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (AmplifyException e) {
             Log.e("Tutorial", "Could not initialize Amplify", e);
         }
-
 
 
 //        getData();
@@ -122,14 +123,18 @@ public class MainActivity extends AppCompatActivity {
 
             return true ;
         });
-
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String teamName = sharedPreferences.getString("teamName" , "") ;
+        Log.i("teamName" , teamName) ;
         Amplify.API.query(
-                ModelQuery.list(Task.class),
+                ModelQuery.list(Team.class , Team.NAME.contains(teamName)),
                 response -> {
 
-                    for (Task task : response.getData()) {
-                        mytasks.add(task);
+                    for (Team team : response.getData()) {
+                        Log.i("team" , team.toString());
+                        mytasks = team.getTasks();
                     }
+                    Log.i("myTasks" , mytasks.toString());
                     Bundle bundle = new Bundle();
                     bundle.putString("data" , "Done");
 
@@ -208,6 +213,6 @@ public class MainActivity extends AppCompatActivity {
 //
     public void setUserName(){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mUserTitle.setText(sharedPreferences.getString("username" , "My") + " Tasks");
+        mUserTitle.setText( sharedPreferences.getString("teamName" , "team1") + " : " +sharedPreferences.getString("username" , "My") +" Tasks");
     }
 }

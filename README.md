@@ -22,3 +22,8 @@ Now you can add the task to your sqlite database from add task button
 
 
 ## AWS 
+Now the app is connect with AWS backend and the task is related to the team thats belongs to . 
+
+![AWS](screenshots/Screenshot_1.png)
+![AWS](screenshots/Screenshot_2.png)
+![AWS](screenshots/Screenshot_3.png)
