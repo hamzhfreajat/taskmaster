@@ -23,4 +23,9 @@
         <item>in progress</item>
         <item>complete</item>
     </string-array>
+    <string-array name="team_array">
+        <item>team 1</item>
+        <item>team 2</item>
+        <item>team 4</item>
+    </string-array>
 </resources>

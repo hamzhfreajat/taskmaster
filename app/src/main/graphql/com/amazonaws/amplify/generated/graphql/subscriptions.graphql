@@ -1,4 +1,85 @@
 # this is an auto generated file. This will be overwritten
+subscription OnCreateTeam {
+  onCreateTeam {
+    id
+    name
+    tasks {
+      items {
+        id
+        title
+        body
+        status
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        teamTasksId
+      }
+      nextToken
+      startedAt
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+subscription OnUpdateTeam {
+  onUpdateTeam {
+    id
+    name
+    tasks {
+      items {
+        id
+        title
+        body
+        status
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        teamTasksId
+      }
+      nextToken
+      startedAt
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+subscription OnDeleteTeam {
+  onDeleteTeam {
+    id
+    name
+    tasks {
+      items {
+        id
+        title
+        body
+        status
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        teamTasksId
+      }
+      nextToken
+      startedAt
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
 subscription OnCreateTask {
   onCreateTask {
     id
@@ -10,6 +91,7 @@ subscription OnCreateTask {
     _version
     _deleted
     _lastChangedAt
+    teamTasksId
   }
 }
 subscription OnUpdateTask {
@@ -23,6 +105,7 @@ subscription OnUpdateTask {
     _version
     _deleted
     _lastChangedAt
+    teamTasksId
   }
 }
 subscription OnDeleteTask {
@@ -36,5 +119,6 @@ subscription OnDeleteTask {
     _version
     _deleted
     _lastChangedAt
+    teamTasksId
   }
 }
