@@ -47,6 +47,15 @@ public class ExampleInstrumentedTest {
     private RecyclerView recyclerView;
 
     @Test
+    public void editUserName(){
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+        onView(withText("Setting")).perform(click());
+        onView(withId(R.id.edit_user_name)).perform(typeText("Ahmad") ,closeSoftKeyboard());
+        onView(withId(R.id.btn_save)).perform(click());
+        onView(withId(R.id.text_user)).check(matches(withText("team 2 : Ahmad Tasks"))) ;
+    }
+
+    @Test
     public void navigateToAddTask(){
         onView(withId(R.id.btn_add_task)).perform(click());
         onView(withId(R.id.edit_task_title)).perform(typeText("Task 12") ,closeSoftKeyboard());
@@ -62,18 +71,9 @@ public class ExampleInstrumentedTest {
         onView(withId(R.id.text_description)).check(matches(withText("Do your home work")));
         onView(withId(R.id.text_status)).check(matches(withText("new")));
 
-
-
     }
 
-    @Test
-    public void editUserName(){
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
-        onView(withText("Setting")).perform(click());
-        onView(withId(R.id.edit_user_name)).perform(typeText("Ahmad") ,closeSoftKeyboard());
-        onView(withId(R.id.btn_save)).perform(click());
-        onView(withId(R.id.text_user)).check(matches(withText("Ahmad Tasks"))) ;
-    }
+
 
     @Test
     public void useAppContext() {

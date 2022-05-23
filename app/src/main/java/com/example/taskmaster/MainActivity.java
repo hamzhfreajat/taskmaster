@@ -127,14 +127,12 @@ public class MainActivity extends AppCompatActivity {
         String teamName = sharedPreferences.getString("teamName" , "") ;
         Log.i("teamName" , teamName) ;
         Amplify.API.query(
-                ModelQuery.list(Team.class , Team.NAME.contains(teamName)),
+                ModelQuery.list(Team.class ,Team.NAME.contains(teamName) ),
                 response -> {
 
                     for (Team team : response.getData()) {
-                        Log.i("team" , team.toString());
                         mytasks = team.getTasks();
                     }
-                    Log.i("myTasks" , mytasks.toString());
                     Bundle bundle = new Bundle();
                     bundle.putString("data" , "Done");
 
