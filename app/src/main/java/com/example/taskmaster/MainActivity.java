@@ -23,6 +23,7 @@ import com.amplifyframework.AmplifyException;
 import com.amplifyframework.api.aws.AWSApiPlugin;
 import com.amplifyframework.api.graphql.model.ModelMutation;
 import com.amplifyframework.api.graphql.model.ModelQuery;
+import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.AWSDataStorePlugin;
 import com.amplifyframework.datastore.generated.model.Task;
@@ -38,6 +39,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
     private TextView mUserTitle;
 //    private Button labTask;
 //    private Button codeChallangeTask;
@@ -51,15 +53,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        try {
-            Amplify.addPlugin(new AWSDataStorePlugin());
-            Amplify.addPlugin(new AWSApiPlugin());
-            Amplify.configure(getApplicationContext());
 
-            Log.i("Tutorial", "Initialized Amplify");
-        } catch (AmplifyException e) {
-            Log.e("Tutorial", "Could not initialize Amplify", e);
-        }
 
 
 //        getData();
@@ -81,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         mUserTitle = findViewById(R.id.text_user);
+
+
 //        labTask = findViewById(R.id.btn_taskmyTaskText1);
 //        codeChallangeTask = findViewById(R.id.btn_task2);
 //        sleepTask = findViewById(R.id.btn_task3);
@@ -126,13 +122,15 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String teamName = sharedPreferences.getString("teamName" , "") ;
         Log.i("teamName" , teamName) ;
+
         Amplify.API.query(
-                ModelQuery.list(Team.class ,Team.NAME.contains(teamName) ),
+                ModelQuery.list(Team.class , Team.NAME.contains(teamName)),
                 response -> {
 
                     for (Team team : response.getData()) {
                         mytasks = team.getTasks();
                     }
+                    Log.i("tasks" , mytasks.toString()) ;
                     Bundle bundle = new Bundle();
                     bundle.putString("data" , "Done");
 
