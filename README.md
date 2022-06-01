@@ -27,3 +27,8 @@ Now the app is connect with AWS backend and the task is related to the team that
 ![AWS](screenshots/Screenshot_1.png)
 ![AWS](screenshots/Screenshot_2.png)
 ![AWS](screenshots/Screenshot_3.png)
+
+
+## Authentication system 
+![signUP](screenshots/signUP.png)
+![login-page](screenshots/login-page.png)

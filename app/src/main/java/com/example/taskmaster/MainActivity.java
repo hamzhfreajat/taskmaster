@@ -24,6 +24,7 @@ import com.amplifyframework.api.aws.AWSApiPlugin;
 import com.amplifyframework.api.graphql.model.ModelMutation;
 import com.amplifyframework.api.graphql.model.ModelQuery;
 import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin;
+import com.amplifyframework.auth.cognito.AWSCognitoAuthSession;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.AWSDataStorePlugin;
 import com.amplifyframework.datastore.generated.model.Task;
@@ -31,6 +32,7 @@ import com.amplifyframework.datastore.generated.model.Team;
 import com.example.taskmaster.data.AppDatabase;
 import com.example.taskmaster.data.TaskData;
 import com.example.taskmaster.ui.CustomRecyclerView;
+import com.example.taskmaster.ui.LoginActivity;
 import com.example.taskmaster.ui.SettingActivity;
 import com.example.taskmaster.ui.TaskDetailActivity;
 
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     List<TaskData> taskData = new ArrayList<>();
     private Handler handler;
     private List<Task> mytasks;
+    private String userId ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
 //            startActivity(allTaskActivity);
 //        });
 //        mUserTitle = findViewById(R.id.myTaskText);
+
+        authSession("onCreate");
 
     }
 
@@ -178,6 +183,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_settings:
                 navigateToSettings();
                 return true;
+
+            case R.id.logout:
+                logout();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -187,6 +197,50 @@ public class MainActivity extends AppCompatActivity {
         Intent settingIntent = new Intent(this , SettingActivity.class);
         startActivity(settingIntent);
     }
+
+    private void authSession(String method) {
+
+
+
+
+        Amplify.Auth.fetchAuthSession(
+                result -> {
+                    Log.i(TAG, "Auth Session => " + method + result.toString()) ;
+
+                    AWSCognitoAuthSession cognitoAuthSession = (AWSCognitoAuthSession) result;
+
+                    switch(cognitoAuthSession.getIdentityId().getType()) {
+                        case SUCCESS:
+                        {
+                            Log.i("AuthQuickStart", "IdentityId: " + cognitoAuthSession.getIdentityId().getValue());
+                            userId = cognitoAuthSession.getIdentityId().getValue();
+                            break;
+                        }
+
+                        case FAILURE:
+                            Log.i("AuthQuickStart", "IdentityId not present because: " + cognitoAuthSession.getIdentityId().getError().toString());
+                    }
+
+
+                },
+                error -> Log.e(TAG, error.toString())
+        );
+    }
+
+
+    public void logout(){
+        Amplify.Auth.signOut(
+                () -> {
+                    Log.i(TAG, "Signed out successfully");
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    authSession("logout");
+                    finish();
+                },
+                error -> Log.e(TAG, error.toString())
+        );
+    }
+
+
 //    public void navigateToDetail(){
 //        labTask.setOnClickListener(view -> {
 //            Intent taskDetailActivity = new Intent(getApplicationContext() , TaskDetailActivity.class);
@@ -211,4 +265,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mUserTitle.setText( sharedPreferences.getString("teamName" , "team1") + " : " +sharedPreferences.getString("username" , "My") +" Tasks");
     }
+
+
 }

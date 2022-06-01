@@ -110,11 +110,25 @@
 
 
     <TextView
-        android:layout_marginBottom="15dp"
+        android:id="@+id/user_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="example@example.com"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/text_user"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.326" />
+
+    <TextView
         android:id="@+id/text_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="15dp"
         android:text="@string/user_name"
         android:textColor="@color/black"
         android:textSize="40sp"
@@ -122,20 +136,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginTop="15dp"
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="400dp"
+        android:layout_marginTop="15dp"
         android:padding="10dp"
         app:layout_constraintBottom_toTopOf="@+id/btn_add_task"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.372" />
+        app:layout_constraintVertical_bias="0.554" />
 
     <Button
         android:id="@+id/btn_add_task"
