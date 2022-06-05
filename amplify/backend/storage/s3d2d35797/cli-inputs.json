@@ -1,0 +1,14 @@
+{
+  "resourceName": "s3d2d35797",
+  "policyUUID": "d2d35797",
+  "bucketName": "taskmasterc589b68dd995499ea8980537f04ffd3c",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}
