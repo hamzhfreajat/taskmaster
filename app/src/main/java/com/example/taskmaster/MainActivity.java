@@ -43,9 +43,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private TextView mUserTitle;
-//    private Button labTask;
-//    private Button codeChallangeTask;
-//    private Button sleepTask;
     List<TaskData> taskData = new ArrayList<>();
     private Handler handler;
     private List<Task> mytasks;
@@ -58,19 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-//        getData();
-
-//        RecyclerView recyclerView = findViewById(R.id.recycler_view);
-//
-//        CustomRecyclerView customRecyclerView = new CustomRecyclerView(taskData);
-//
-//        recyclerView.setAdapter(customRecyclerView);
-//
-//        recyclerView.setHasFixedSize(true);
-//
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         Button addTaskBtn = findViewById(R.id.btn_add_task);
         addTaskBtn.setOnClickListener(view -> {
             startActivity(new Intent(getApplicationContext() , AddTaskActivity.class));
@@ -80,19 +64,6 @@ public class MainActivity extends AppCompatActivity {
         mUserTitle = findViewById(R.id.text_user);
 
 
-//        labTask = findViewById(R.id.btn_taskmyTaskText1);
-//        codeChallangeTask = findViewById(R.id.btn_task2);
-//        sleepTask = findViewById(R.id.btn_task3);
-
-//        navigateToDetail();
-
-
-//        Button allTask = findViewById(R.id.allTask);
-//        allTask.setOnClickListener(view -> {
-//            Intent allTaskActivity = new Intent(getApplicationContext() , AllTaskActivity.class);
-//            startActivity(allTaskActivity);
-//        });
-//        mUserTitle = findViewById(R.id.myTaskText);
 
         authSession("onCreate");
 
@@ -148,29 +119,13 @@ public class MainActivity extends AppCompatActivity {
         );
 
 
-//        List<TaskData> taskData2 = AppDatabase.getInstance(this).taskDao().getAll();
+
 
 
         super.onResume();
     }
 
-//    public void getData(){
-//        taskData.add(new TaskData("task 1" , "Solve task 1 " , "new"));
-//        taskData.add(new TaskData("task 2" , "Solve task 2 " , "assigned"));
-//        taskData.add(new TaskData("task 3" , "Solve task 3 " , "assigned"));
-//        taskData.add(new TaskData("task 4" , "Solve task 4 " , "in progress"));
-//        taskData.add(new TaskData("task 5" , "Solve task 5 " , "in progress"));
-//        taskData.add(new TaskData("task 6" , "Solve task 6 " , "complete"));
-//        taskData.add(new TaskData("task 7" , "Solve task 7 " , "complete"));
-//        taskData.add(new TaskData("task 8" , "Solve task 8 " , "new"));
-//        taskData.add(new TaskData("task 9" , "Solve task 9 " , "new"));
-//    }
-//    @Override
-//    protected void onResume() {
-//        setUserName();
-//        super.onResume();
-//    }
-//
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main , menu);
@@ -241,26 +196,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-//    public void navigateToDetail(){
-//        labTask.setOnClickListener(view -> {
-//            Intent taskDetailActivity = new Intent(getApplicationContext() , TaskDetailActivity.class);
-//            taskDetailActivity.putExtra("title" , labTask.getText().toString());
-//            startActivity(taskDetailActivity);
-//        });
-//
-//        codeChallangeTask.setOnClickListener(view -> {
-//            Intent taskDetailActivity = new Intent(getApplicationContext() , TaskDetailActivity.class);
-//            taskDetailActivity.putExtra("title" , codeChallangeTask.getText().toString());
-//            startActivity(taskDetailActivity);
-//        });
-//
-//        sleepTask.setOnClickListener(view -> {
-//            Intent taskDetailActivity = new Intent(getApplicationContext() , TaskDetailActivity.class);
-//            taskDetailActivity.putExtra("title" , sleepTask.getText().toString());
-//            startActivity(taskDetailActivity);
-//        });
-//    }
-//
     public void setUserName(){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mUserTitle.setText( sharedPreferences.getString("teamName" , "team1") + " : " +sharedPreferences.getString("username" , "My") +" Tasks");

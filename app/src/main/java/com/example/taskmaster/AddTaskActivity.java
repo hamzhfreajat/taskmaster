@@ -69,15 +69,15 @@ public class AddTaskActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
 
-//        try {
-//            Amplify.addPlugin(new AWSDataStorePlugin());
-//            Amplify.addPlugin(new AWSApiPlugin());
-//            Amplify.configure(getApplicationContext());
-//
-//            Log.i("Tutorial", "Initialized Amplify");
-//        } catch (AmplifyException e) {
-//            Log.e("Tutorial", "Could not initialize Amplify", e);
-//        }
+        // Lab 39
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (type.startsWith("image/")) {
+            handleSendImage(intent); // Handle single image being sent
+        }
+
 
         super.onCreate(savedInstanceState);
 
@@ -131,7 +131,7 @@ public class AddTaskActivity extends AppCompatActivity {
                 error -> Log.e("MyAmplifyApp", "Query failure", error)
         );
 
-
+        // Submit button listener
         addTask.setOnClickListener(v -> {
 
 
@@ -168,17 +168,7 @@ public class AddTaskActivity extends AppCompatActivity {
                     error -> Log.e(TAG, "Could not save item to DataStore", error)
             );
 
-//            Amplify.API.mutate(ModelMutation.create(item) ,
-//                    success -> Log.i(TAG, "Saved item API") ,
-//                    error -> Log.e(TAG, "Could not save item to DataStore", error)
-//            );
 
-
-
-
-
-//            TaskData taskData = new TaskData(taskTitle.getText().toString() , taskDesc.getText().toString() ,spinner.getSelectedItem().toString());
-//            Long newTask = AppDatabase.getInstance(getApplicationContext()).taskDao().insertTask(taskData);
             startActivity(new Intent(getApplicationContext() , MainActivity.class));
         });
     }
@@ -189,7 +179,6 @@ public class AddTaskActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, REQUEST_CODE);
-
 
     }
 
@@ -207,31 +196,9 @@ public class AddTaskActivity extends AppCompatActivity {
                 // Get photo picker response for single select.
                 Uri currentUri = data.getData();
 
-                // Do stuff with the photo/video URI.
-                Log.i(TAG, "onActivityResult: the uri is => " + currentUri);
+                // Upload image to S3
+                imageS3upload(currentUri);
 
-                try {
-                    Bitmap bitmap = getBitmapFromUri(currentUri);
-
-                    File file = new File(getApplicationContext().getFilesDir(), "image.jpg");
-                    OutputStream os = new BufferedOutputStream(new FileOutputStream(file));
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
-                    os.close();
-
-                    // upload to s3
-                    // uploads the file
-                    Amplify.Storage.uploadFile(
-                            "image.jpg",
-                            file,
-                            result -> {
-                                Log.i(TAG, "Successfully uploaded: " + result.getKey()) ;
-                                imageKey = result.getKey();
-                            },
-                            storageFailure -> Log.e(TAG, "Upload failed", storageFailure)
-                    );
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
                 return;
         }
     }
@@ -247,12 +214,40 @@ public class AddTaskActivity extends AppCompatActivity {
         return image;
     }
 
-    private void pictureDownload(){
-        Amplify.Storage.downloadFile(
-                "ExampleKey",
-                new File(getApplicationContext().getFilesDir() + "/download.txt"),
-                result -> Log.i("MyAmplifyApp", "Successfully downloaded: " + result.getFile().getName()),
-                error -> Log.e("MyAmplifyApp",  "Download Failure", error)
-        );
+
+    private void handleSendImage(Intent intent){
+        Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        if (imageUri != null) {
+            imageS3upload(imageUri);
+        }
+    }
+
+
+    private void imageS3upload(Uri currentUri){
+        Bitmap bitmap = null;
+        try {
+            bitmap = getBitmapFromUri(currentUri);
+            File file = new File(getApplicationContext().getFilesDir(), "image.jpg");
+            OutputStream os = new BufferedOutputStream(new FileOutputStream(file));
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            os.close();
+
+            // upload to s3
+            // uploads the file
+            Amplify.Storage.uploadFile(
+                    "image.jpg",
+                    file,
+                    result -> {
+                        Log.i(TAG, "Successfully uploaded: " + result.getKey()) ;
+                        imageKey = result.getKey();
+                        Toast.makeText(getApplicationContext(), "Image Uploaded", Toast.LENGTH_SHORT).show();
+                    },
+                    storageFailure -> Log.e(TAG, "Upload failed", storageFailure)
+            );
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
