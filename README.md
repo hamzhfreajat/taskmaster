@@ -1,5 +1,5 @@
 # Taskmaster
-You can navigate through three page home , add task and all task page .
+You can login , logout and signUp in the app and you can recive image from another app directly to add it to new task .
 
 ![Home Page](screenshots/home.png)
 
