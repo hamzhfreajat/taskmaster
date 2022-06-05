@@ -34,6 +34,7 @@ import com.amplifyframework.datastore.generated.model.Team;
 import com.example.taskmaster.data.AppDatabase;
 import com.example.taskmaster.data.TaskData;
 import com.example.taskmaster.ui.CustomRecyclerView;
+import com.example.taskmaster.ui.MapsActivity;
 import com.example.taskmaster.ui.TaskDetailActivity;
 
 import java.io.BufferedOutputStream;
@@ -57,6 +58,8 @@ public class AddTaskActivity extends AppCompatActivity {
     private EditText taskTitle;
     private EditText taskDesc;
 
+    private Button addLocation;
+
     private Spinner spinner;
 
     private List<Team> teamList = new ArrayList<>();
@@ -74,9 +77,9 @@ public class AddTaskActivity extends AppCompatActivity {
         String action = intent.getAction();
         String type = intent.getType();
 
-        if (type.startsWith("image/")) {
-            handleSendImage(intent); // Handle single image being sent
-        }
+//        if (type.startsWith("image/")) {
+//            handleSendImage(intent); // Handle single image being sent
+//        }
 
 
         super.onCreate(savedInstanceState);
@@ -170,6 +173,14 @@ public class AddTaskActivity extends AppCompatActivity {
 
 
             startActivity(new Intent(getApplicationContext() , MainActivity.class));
+        });
+
+        addLocation = findViewById(R.id.fab_log_weather);
+
+        addLocation.setOnClickListener(view -> {
+            Intent navigateToMaps = new Intent(getApplicationContext(),
+                    MapsActivity.class);
+            startActivity(navigateToMaps);
         });
     }
 
