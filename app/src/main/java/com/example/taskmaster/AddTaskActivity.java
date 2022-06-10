@@ -175,13 +175,13 @@ public class AddTaskActivity extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext() , MainActivity.class));
         });
 
-        addLocation = findViewById(R.id.fab_log_weather);
-
-        addLocation.setOnClickListener(view -> {
-            Intent navigateToMaps = new Intent(getApplicationContext(),
-                    MapsActivity.class);
-            startActivity(navigateToMaps);
-        });
+//        addLocation = findViewById(R.id.fab_log_weather);
+//
+//        addLocation.setOnClickListener(view -> {
+//            Intent navigateToMaps = new Intent(getApplicationContext(),
+//                    MapsActivity.class);
+//            startActivity(navigateToMaps);
+//        });
     }
 
 
@@ -236,9 +236,11 @@ public class AddTaskActivity extends AppCompatActivity {
 
     private void imageS3upload(Uri currentUri){
         Bitmap bitmap = null;
+        String currentUriStr = String.valueOf(currentUri.getLastPathSegment())  + ".jpg";
+        Log.i("CurrentURI" , currentUriStr);
         try {
             bitmap = getBitmapFromUri(currentUri);
-            File file = new File(getApplicationContext().getFilesDir(), "image.jpg");
+            File file = new File(getApplicationContext().getFilesDir(), currentUriStr );
             OutputStream os = new BufferedOutputStream(new FileOutputStream(file));
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
             os.close();
@@ -246,7 +248,7 @@ public class AddTaskActivity extends AppCompatActivity {
             // upload to s3
             // uploads the file
             Amplify.Storage.uploadFile(
-                    "image.jpg",
+                    currentUriStr,
                     file,
                     result -> {
                         Log.i(TAG, "Successfully uploaded: " + result.getKey()) ;

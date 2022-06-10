@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amplifyframework.AmplifyException;
+import com.amplifyframework.analytics.AnalyticsEvent;
 import com.amplifyframework.api.aws.AWSApiPlugin;
 import com.amplifyframework.api.graphql.model.ModelMutation;
 import com.amplifyframework.api.graphql.model.ModelQuery;
@@ -54,6 +55,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+        AnalyticsEvent event = AnalyticsEvent.builder()
+                .name("openMyApp")
+                .addProperty("Successful", true)
+                .build();
+
+        Amplify.Analytics.recordEvent(event);
 
         Button addTaskBtn = findViewById(R.id.btn_add_task);
         addTaskBtn.setOnClickListener(view -> {
