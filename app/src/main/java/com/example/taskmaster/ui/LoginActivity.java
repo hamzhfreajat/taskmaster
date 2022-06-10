@@ -16,6 +16,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.amplifyframework.core.Amplify;
 import com.example.taskmaster.MainActivity;
 import com.example.taskmaster.R;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -57,6 +60,9 @@ public class LoginActivity extends AppCompatActivity {
                 login(usernameEditText.getText().toString(), passwordEditText.getText().toString());
             }
         });
+
+
+
     }
 
     private void login(String email, String password) {
