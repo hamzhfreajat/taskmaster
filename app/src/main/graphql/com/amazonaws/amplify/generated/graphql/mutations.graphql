@@ -11,6 +11,8 @@ mutation CreateTeam(
         id
         title
         body
+        Latitude
+        Longitude
         status
         image
         createdAt
@@ -42,6 +44,8 @@ mutation UpdateTeam(
         id
         title
         body
+        Latitude
+        Longitude
         status
         image
         createdAt
@@ -73,6 +77,8 @@ mutation DeleteTeam(
         id
         title
         body
+        Latitude
+        Longitude
         status
         image
         createdAt
@@ -100,6 +106,8 @@ mutation CreateTask(
     id
     title
     body
+    Latitude
+    Longitude
     status
     image
     createdAt
@@ -118,6 +126,8 @@ mutation UpdateTask(
     id
     title
     body
+    Latitude
+    Longitude
     status
     image
     createdAt
@@ -136,6 +146,8 @@ mutation DeleteTask(
     id
     title
     body
+    Latitude
+    Longitude
     status
     image
     createdAt

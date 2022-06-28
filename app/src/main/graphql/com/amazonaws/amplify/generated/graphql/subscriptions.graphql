@@ -8,6 +8,8 @@ subscription OnCreateTeam {
         id
         title
         body
+        Latitude
+        Longitude
         status
         image
         createdAt
@@ -36,6 +38,8 @@ subscription OnUpdateTeam {
         id
         title
         body
+        Latitude
+        Longitude
         status
         image
         createdAt
@@ -64,6 +68,8 @@ subscription OnDeleteTeam {
         id
         title
         body
+        Latitude
+        Longitude
         status
         image
         createdAt
@@ -88,6 +94,8 @@ subscription OnCreateTask {
     id
     title
     body
+    Latitude
+    Longitude
     status
     image
     createdAt
@@ -103,6 +111,8 @@ subscription OnUpdateTask {
     id
     title
     body
+    Latitude
+    Longitude
     status
     image
     createdAt
@@ -118,6 +128,8 @@ subscription OnDeleteTask {
     id
     title
     body
+    Latitude
+    Longitude
     status
     image
     createdAt

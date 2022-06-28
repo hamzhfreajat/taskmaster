@@ -11,6 +11,8 @@ type Task @model {
   id: ID!
   title: String
   body: String
+  Latitude: Float
+  Longitude: Float
   status: String
   image: String
 }

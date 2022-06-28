@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:text="@string/description" />
 
+
         <TextView
             android:id="@+id/resStatus"
             android:layout_width="match_parent"
