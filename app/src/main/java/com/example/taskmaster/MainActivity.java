@@ -65,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
     private String userId ;
     private InterstitialAd mInterstitialAd;
     private RewardedAd mRewardedAd;
+    private Button mBtnAds ;
+    private Button mRewardedBtn ;
+    private TextView adsText ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,12 +89,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         mUserTitle = findViewById(R.id.text_user);
+        adsText = findViewById(R.id.user_succ) ;
 
 
 
         authSession("onCreate");
 
-        // Banner Ads
+//         Banner Ads
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -102,32 +106,39 @@ public class MainActivity extends AppCompatActivity {
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+//
 
         // Interstitial Ads
-        setInterstitialAd();
-        if (mInterstitialAd != null) {
-            mInterstitialAd.show(MainActivity.this);
-        } else {
-            Log.d("TAG", "The interstitial ad wasn't ready yet.");
-        }
+        mBtnAds = findViewById(R.id.btn_ads);
+        mBtnAds.setOnClickListener(view -> {
+            setInterstitialAd();
+            if (mInterstitialAd != null) {
+                mInterstitialAd.show(MainActivity.this);
+            } else {
+                Log.d("TAG", "The interstitial ad wasn't ready yet.");
+            }
+        });
 
-        // Reward Ads
-        setRewardedAd();
-        if (mRewardedAd != null) {
-            Activity activityContext = MainActivity.this;
-            mRewardedAd.show(activityContext, new OnUserEarnedRewardListener() {
-                @Override
-                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
-                    // Handle the reward.
-                    Log.d(TAG, "The user earned the reward.");
-                    int rewardAmount = rewardItem.getAmount();
-                    String rewardType = rewardItem.getType();
-                }
-            });
-        } else {
-            Log.d(TAG, "The rewarded ad wasn't ready yet.");
-        }
-
+//
+//        // Reward Ads
+        mRewardedBtn = findViewById(R.id.btn_reward_ads);
+        mRewardedBtn.setOnClickListener(view -> {
+            setRewardedAd();
+            if (mRewardedAd != null) {
+                Activity activityContext = MainActivity.this;
+                mRewardedAd.show(activityContext, new OnUserEarnedRewardListener() {
+                    @Override
+                    public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                        // Handle the reward.
+                        Log.d(TAG, "The user earned the reward.");
+                        int rewardAmount = rewardItem.getAmount();
+                        String rewardType = rewardItem.getType();
+                    }
+                });
+            } else {
+                Log.d(TAG, "The rewarded ad wasn't ready yet.");
+            }
+        });
     }
 
     @Override
@@ -331,7 +342,9 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onAdShowedFullScreenContent() {
                                 // Called when ad is shown.
+
                                 Log.d(TAG, "Ad was shown.");
+                                adsText.setText("Congratulations");
                             }
 
                             @Override

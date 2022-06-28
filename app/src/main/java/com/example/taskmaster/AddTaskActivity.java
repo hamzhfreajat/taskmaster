@@ -1,14 +1,23 @@
 package com.example.taskmaster;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,6 +45,15 @@ import com.example.taskmaster.data.TaskData;
 import com.example.taskmaster.ui.CustomRecyclerView;
 import com.example.taskmaster.ui.MapsActivity;
 import com.example.taskmaster.ui.TaskDetailActivity;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.vmadalin.easypermissions.EasyPermissions;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
@@ -50,10 +68,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-public class AddTaskActivity extends AppCompatActivity {
+public class AddTaskActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
 
     public static final int REQUEST_CODE = 123;
     private static final String TAG = AddTaskActivity.class.getName();
+    private double latitude;
+    private double longitude;
+    private FusedLocationProviderClient mFusedLocationClient;
+
 
     private EditText taskTitle;
     private EditText taskDesc;
@@ -66,6 +88,18 @@ public class AddTaskActivity extends AppCompatActivity {
     private String imageKey = "" ;
 
     private Team team ;
+    private Team selectedTeam;
+
+
+    private final LocationCallback mLocationCallback = new LocationCallback() {
+
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            Location mLastLocation = locationResult.getLastLocation();
+            latitude = mLastLocation.getLatitude() ;
+            longitude =  mLastLocation.getLongitude();
+        }
+    };
 
 
     @Override
@@ -93,6 +127,8 @@ public class AddTaskActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_task);
         Button addTask = findViewById(R.id.btn_submit_task);
         spinner = findViewById(R.id.team_spinner);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
 
         // LAB 37
         Button upload = findViewById(R.id.btn_image_upload);
@@ -137,12 +173,11 @@ public class AddTaskActivity extends AppCompatActivity {
         // Submit button listener
         addTask.setOnClickListener(v -> {
 
-
             taskTitle = findViewById(R.id.edit_task_title);
             taskDesc = findViewById(R.id.edit_task_desc);
 
             String spinnerSelected = spinner.getSelectedItem().toString();
-            Team selectedTeam = teamList.get(0);
+            selectedTeam = teamList.get(0);
 
             for (Team team :
                     teamList) {
@@ -153,27 +188,18 @@ public class AddTaskActivity extends AppCompatActivity {
 
 
 
+            getLastLocation();
 
 
-            Task item = Task.builder()
-                    .title(taskTitle.getText().toString())
-                    .body(taskDesc.getText().toString())
-                    .status(spinner.getSelectedItem().toString())
-                    .teamTasksId(selectedTeam.getId())
-                    .image(imageKey)
-                    .build();
+// Map Lab
 
 
 
-//
-            Amplify.DataStore.save(item,
-                    success -> Log.i(TAG, "Saved item "),
-                    error -> Log.e(TAG, "Could not save item to DataStore", error)
-            );
 
-
-            startActivity(new Intent(getApplicationContext() , MainActivity.class));
         });
+
+
+
 
 //        addLocation = findViewById(R.id.fab_log_weather);
 //
@@ -186,7 +212,6 @@ public class AddTaskActivity extends AppCompatActivity {
 
 
     public void uploadImage(){
-
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, REQUEST_CODE);
@@ -262,5 +287,119 @@ public class AddTaskActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+
+
+
+
+    @Override
+    public void onPermissionsGranted(int i, @NonNull List<String> list) {
+        Toast.makeText(this, "Permission Granted!", Toast.LENGTH_SHORT).show();
+    }
+
+    @SuppressLint("MissingPermission")
+    private void getLastLocation() {
+        // check if permissions are given
+        if (hasLocationPermission()) {
+
+            // check if location is enabled
+            if (isLocationEnabled()) {
+
+                mFusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
+                    Location location = task.getResult();
+                    Log.i("location1" , location.toString());
+                    if (location == null) {
+                        Log.i("location2" , location.toString());
+                        requestNewLocationData();
+                    } else {
+                        Log.i("location3" , String.valueOf(location.getLatitude()));
+                        latitude = location.getLatitude();
+                        longitude = location.getLongitude();
+                        runOnUiThread(() -> {
+                            Task item = Task.builder()
+                                    .title(taskTitle.getText().toString())
+                                    .body(taskDesc.getText().toString())
+                                    .status(spinner.getSelectedItem().toString())
+                                    .latitude(latitude)
+                                    .longitude(longitude)
+                                    .teamTasksId(selectedTeam.getId())
+                                    .image(imageKey)
+                                    .build();
+
+                            Amplify.API.mutate(ModelMutation.create(item),
+                                    successSaveToAPI -> Log.i(TAG, "Saved item: " + successSaveToAPI.getData().getTitle()),
+                                    error -> Log.e(TAG, "Could not save to API" + error)
+                            );
+
+                            startActivity(new Intent(getApplicationContext() , MainActivity.class));
+                        });
+
+                    }
+                });
+            } else {
+                Toast.makeText(this, "Please turn on" + " your location...", Toast.LENGTH_LONG).show();
+
+            }
+        } else {
+            // if permissions aren't available,
+            // request for permissions
+            requestLocationPermission();
+            mFusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+                Log.i(TAG, "" + location.getLongitude());
+                Toast.makeText(getApplicationContext(), "NO LONGITUDE & LATITUDE =>" + location.getLongitude(), Toast.LENGTH_SHORT).show();
+            });
+        }
+
+    }
+
+    private boolean isLocationEnabled() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    @SuppressLint("MissingPermission")
+    private void requestNewLocationData() {
+
+        // Initializing LocationRequest
+        // object with appropriate methods
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(5);
+        mLocationRequest.setFastestInterval(0);
+        mLocationRequest.setNumUpdates(1);
+
+        // setting LocationRequest
+        // on FusedLocationClient
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+    }
+
+    private boolean hasLocationPermission() {
+        return EasyPermissions.hasPermissions(
+                getApplicationContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+        );
+
+    }
+
+    private void requestLocationPermission() {
+        EasyPermissions.requestPermissions(
+                this,
+                "this Application cannot work without Location Permission",
+                REQUEST_CODE,
+                Manifest.permission.ACCESS_FINE_LOCATION
+        );
+    }
+
+    @Override
+    public void onPermissionsDenied(int i, @NonNull List<String> list) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, list)) {
+            Toast.makeText(this, "the application have not permission", Toast.LENGTH_SHORT).show();
+
+        } else {
+            requestLocationPermission();
+        }
     }
 }

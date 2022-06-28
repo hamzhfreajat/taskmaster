@@ -1,0 +1,11 @@
+{
+  "authRoleName": {
+    "Ref": "AuthRoleName"
+  },
+  "unauthRoleName": {
+    "Ref": "UnauthRoleName"
+  },
+  "mapName": "mapefccadd5",
+  "mapStyle": "VectorEsriStreets",
+  "isDefault": true
+}

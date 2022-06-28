@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +23,8 @@ import com.amplifyframework.api.graphql.model.ModelQuery;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.AWSDataStorePlugin;
 import com.amplifyframework.datastore.generated.model.Task;
+import com.amplifyframework.geo.maplibre.view.AmplifyMapView;
+import com.amplifyframework.geo.models.Coordinates;
 import com.amplifyframework.predictions.models.LanguageType;
 import com.bumptech.glide.Glide;
 import com.example.taskmaster.R;
@@ -40,10 +43,12 @@ import java.util.List;
 public class TaskDetailActivity extends AppCompatActivity {
 
     private static final String TAG = TaskDetailActivity.class.getSimpleName();
-    private String title , desc , status;
+    private String title , desc , status ; 
+    Double lat , longit;
     private ImageView imageView;
     private String imageKey;
     private final MediaPlayer mp = new MediaPlayer();
+    private AmplifyMapView mapView;
 
 
     @Override
@@ -55,6 +60,8 @@ public class TaskDetailActivity extends AppCompatActivity {
         TextView textTitle = findViewById(R.id.text_title);
         TextView textDesc = findViewById(R.id.text_description);
         TextView textStatus = findViewById(R.id.text_status);
+        TextView textLat = findViewById(R.id.text_lat);
+        TextView textLong = findViewById(R.id.text_long);
 
         imageView = findViewById(R.id.img_task);
 
@@ -65,10 +72,23 @@ public class TaskDetailActivity extends AppCompatActivity {
 
             textTitle.setText(title);
             textDesc.setText(desc);
+            textLat.setText(lat.toString());
+            textLong.setText(longit.toString());
+            textDesc.setText(desc);
             textStatus.setText(status.toString());
             if ( imageKey != null){
                 setImage(imageKey);
             }
+
+            mapView = findViewById(R.id.mapView);
+            Coordinates position = new Coordinates(lat,longit);
+            mapView.setOnPlaceSelectListener((place, symbol) -> {
+                // place is an instance of AmazonLocationPlace
+                // symbol is an instance of Symbol from MapLibre
+                Log.i("MyAmplifyApp", "The selected place is " + place.getLabel());
+                Toast.makeText(this, "The selected place is " + place.getLabel(), Toast.LENGTH_SHORT).show();
+                Log.i("MyAmplifyApp", "It is located at " + place.getCoordinates());
+            });
 
             translateDesc();
             return true ;
@@ -84,6 +104,9 @@ public class TaskDetailActivity extends AppCompatActivity {
                         desc = response.getData().getBody();
                         status = response.getData().getStatus();
                         imageKey = response.getData().getImage();
+                        lat = response.getData().getLatitude();
+                        longit = response.getData().getLongitude();
+
 
 
 

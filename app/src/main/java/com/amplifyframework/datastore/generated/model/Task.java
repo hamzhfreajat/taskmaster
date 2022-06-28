@@ -23,12 +23,16 @@ public final class Task implements Model {
   public static final QueryField ID = field("Task", "id");
   public static final QueryField TITLE = field("Task", "title");
   public static final QueryField BODY = field("Task", "body");
+  public static final QueryField LATITUDE = field("Task", "Latitude");
+  public static final QueryField LONGITUDE = field("Task", "Longitude");
   public static final QueryField STATUS = field("Task", "status");
   public static final QueryField IMAGE = field("Task", "image");
   public static final QueryField TEAM_TASKS_ID = field("Task", "teamTasksId");
   private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="String") String title;
   private final @ModelField(targetType="String") String body;
+  private final @ModelField(targetType="Float") Double Latitude;
+  private final @ModelField(targetType="Float") Double Longitude;
   private final @ModelField(targetType="String") String status;
   private final @ModelField(targetType="String") String image;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime createdAt;
@@ -44,6 +48,14 @@ public final class Task implements Model {
   
   public String getBody() {
       return body;
+  }
+  
+  public Double getLatitude() {
+      return Latitude;
+  }
+  
+  public Double getLongitude() {
+      return Longitude;
   }
   
   public String getStatus() {
@@ -66,10 +78,12 @@ public final class Task implements Model {
       return teamTasksId;
   }
   
-  private Task(String id, String title, String body, String status, String image, String teamTasksId) {
+  private Task(String id, String title, String body, Double Latitude, Double Longitude, String status, String image, String teamTasksId) {
     this.id = id;
     this.title = title;
     this.body = body;
+    this.Latitude = Latitude;
+    this.Longitude = Longitude;
     this.status = status;
     this.image = image;
     this.teamTasksId = teamTasksId;
@@ -86,6 +100,8 @@ public final class Task implements Model {
       return ObjectsCompat.equals(getId(), task.getId()) &&
               ObjectsCompat.equals(getTitle(), task.getTitle()) &&
               ObjectsCompat.equals(getBody(), task.getBody()) &&
+              ObjectsCompat.equals(getLatitude(), task.getLatitude()) &&
+              ObjectsCompat.equals(getLongitude(), task.getLongitude()) &&
               ObjectsCompat.equals(getStatus(), task.getStatus()) &&
               ObjectsCompat.equals(getImage(), task.getImage()) &&
               ObjectsCompat.equals(getCreatedAt(), task.getCreatedAt()) &&
@@ -100,6 +116,8 @@ public final class Task implements Model {
       .append(getId())
       .append(getTitle())
       .append(getBody())
+      .append(getLatitude())
+      .append(getLongitude())
       .append(getStatus())
       .append(getImage())
       .append(getCreatedAt())
@@ -116,6 +134,8 @@ public final class Task implements Model {
       .append("id=" + String.valueOf(getId()) + ", ")
       .append("title=" + String.valueOf(getTitle()) + ", ")
       .append("body=" + String.valueOf(getBody()) + ", ")
+      .append("Latitude=" + String.valueOf(getLatitude()) + ", ")
+      .append("Longitude=" + String.valueOf(getLongitude()) + ", ")
       .append("status=" + String.valueOf(getStatus()) + ", ")
       .append("image=" + String.valueOf(getImage()) + ", ")
       .append("createdAt=" + String.valueOf(getCreatedAt()) + ", ")
@@ -144,6 +164,8 @@ public final class Task implements Model {
       null,
       null,
       null,
+      null,
+      null,
       null
     );
   }
@@ -152,6 +174,8 @@ public final class Task implements Model {
     return new CopyOfBuilder(id,
       title,
       body,
+      Latitude,
+      Longitude,
       status,
       image,
       teamTasksId);
@@ -161,6 +185,8 @@ public final class Task implements Model {
     BuildStep id(String id);
     BuildStep title(String title);
     BuildStep body(String body);
+    BuildStep latitude(Double latitude);
+    BuildStep longitude(Double longitude);
     BuildStep status(String status);
     BuildStep image(String image);
     BuildStep teamTasksId(String teamTasksId);
@@ -171,6 +197,8 @@ public final class Task implements Model {
     private String id;
     private String title;
     private String body;
+    private Double Latitude;
+    private Double Longitude;
     private String status;
     private String image;
     private String teamTasksId;
@@ -182,6 +210,8 @@ public final class Task implements Model {
           id,
           title,
           body,
+          Latitude,
+          Longitude,
           status,
           image,
           teamTasksId);
@@ -196,6 +226,18 @@ public final class Task implements Model {
     @Override
      public BuildStep body(String body) {
         this.body = body;
+        return this;
+    }
+    
+    @Override
+     public BuildStep latitude(Double latitude) {
+        this.Latitude = latitude;
+        return this;
+    }
+    
+    @Override
+     public BuildStep longitude(Double longitude) {
+        this.Longitude = longitude;
         return this;
     }
     
@@ -229,10 +271,12 @@ public final class Task implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String title, String body, String status, String image, String teamTasksId) {
+    private CopyOfBuilder(String id, String title, String body, Double latitude, Double longitude, String status, String image, String teamTasksId) {
       super.id(id);
       super.title(title)
         .body(body)
+        .latitude(latitude)
+        .longitude(longitude)
         .status(status)
         .image(image)
         .teamTasksId(teamTasksId);
@@ -246,6 +290,16 @@ public final class Task implements Model {
     @Override
      public CopyOfBuilder body(String body) {
       return (CopyOfBuilder) super.body(body);
+    }
+    
+    @Override
+     public CopyOfBuilder latitude(Double latitude) {
+      return (CopyOfBuilder) super.latitude(latitude);
+    }
+    
+    @Override
+     public CopyOfBuilder longitude(Double longitude) {
+      return (CopyOfBuilder) super.longitude(longitude);
     }
     
     @Override

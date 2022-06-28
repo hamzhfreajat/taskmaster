@@ -8,6 +8,8 @@ query GetTeam($id: ID!) {
         id
         title
         body
+        Latitude
+        Longitude
         status
         image
         createdAt
@@ -84,6 +86,8 @@ query GetTask($id: ID!) {
     id
     title
     body
+    Latitude
+    Longitude
     status
     image
     createdAt
@@ -104,6 +108,8 @@ query ListTasks(
       id
       title
       body
+      Latitude
+      Longitude
       status
       image
       createdAt
@@ -133,6 +139,8 @@ query SyncTasks(
       id
       title
       body
+      Latitude
+      Longitude
       status
       image
       createdAt
